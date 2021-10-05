@@ -15,7 +15,9 @@ SAMPLE_SPREADSHEET_ID = '1uPvwCkQmBNqdQOhmoTBEHWrK6aaqiRc4EQa2QVHkiY4'
 dict = {}
 def readData(data):
     for item in data[1:]:
-        dict[item[0]] = {"parent": item[3],
+        dict[item[0]] = {
+                        "key": item[0],
+                        "parent": item[3],
                          "description": item[1], 
                          "flow": item[2],
                         "status": item[-1]
@@ -57,17 +59,24 @@ def main():
     passedCases = 0
     failedCases = 0
     unTestedCases = 0
+    unTestedList = []
     for key in dict.keys():
         item = dict[key]
-        if item["status"] == "P":
+        if item["status"] == "P" or item["status"] == "p":
           passedCases += 1
-        elif item["status"] == "F":
+        elif item["status"] == "F" or item["status"] == "f":
           failedCases += 1
         else:
           unTestedCases += 1
+          unTestedList.append(item)
     print(f'Tested cases {passedCases + failedCases + unTestedCases}')
     print(f'Test coverage {((passedCases + failedCases) / (passedCases + failedCases + unTestedCases)) * 100}%')
     print(f'Successful: {passedCases} Failed: {failedCases}')
+    print("Untested cases: \n")
+    for item in unTestedList:
+      if item["flow"] == "Main Flow":
+        print("warnning, mainflow not tested")
+        print(item["key"])
     print("Done!")
 
 
