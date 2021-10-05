@@ -1,13 +1,13 @@
 from __future__ import print_function
-import pygraphviz as pgv
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 import os.path
+from termcolor import colored
 
 # If modifying these scopes, delete the file token.json.
-SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
+SCOPES = ['https://www.googleapispip3.com/auth/spreadsheets.readonly']
 
 # The ID and range of a sample spreadsheet.
 SAMPLE_SPREADSHEET_ID = '1uPvwCkQmBNqdQOhmoTBEHWrK6aaqiRc4EQa2QVHkiY4'
@@ -69,14 +69,15 @@ def main():
         else:
           unTestedCases += 1
           unTestedList.append(item)
-    print(f'Tested cases {passedCases + failedCases + unTestedCases}')
-    print(f'Test coverage {((passedCases + failedCases) / (passedCases + failedCases + unTestedCases)) * 100}%')
-    print(f'Successful: {passedCases} Failed: {failedCases}')
+    print(colored("Tested cases", "blue"), passedCases + failedCases + unTestedCases)
+    print(colored("Test coverage", "blue"), (passedCases + failedCases) / (passedCases + failedCases + unTestedCases) )
+    print(colored("Successful: ", "green"), passedCases)
+    print(colored("Failed: ", "red"), failedCases)
     print("Untested cases: \n")
     for item in unTestedList:
       if item["flow"] == "Main Flow":
-        print("warnning, mainflow not tested")
-        print(item["key"])
+        print(colored("warnning, mainflow not tested", "yellow"))
+        print(colored(item["key"], "green"), item["description"])
     print("Done!")
 
 
