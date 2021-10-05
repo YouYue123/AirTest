@@ -13,29 +13,13 @@ SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 SAMPLE_SPREADSHEET_ID = '1uPvwCkQmBNqdQOhmoTBEHWrK6aaqiRc4EQa2QVHkiY4'
 
 dict = {}
-G = pgv.AGraph(directed=True)
-
-
-def getColor(type):
-    if type == "Main Flow":
-        return "green"
-    elif type == "Second Flow":
-        return "blue"
-    elif type == "Edge":
-        return "orange"
-    else:
-        return "purple"
-
-
 def readData(data):
     for item in data[1:]:
         dict[item[0]] = {"parent": item[3],
-                         "description": item[1], "flow": item[2]}
-        if item[3] == "NA":
-            G.add_node(item[0], color="red")
-        else:
-            color = getColor(item[2])
-            G.add_node(item[0], color=color)
+                         "description": item[1], 
+                         "flow": item[2],
+                        "status": item[-1]
+                        }
 
 
 def main():
@@ -70,15 +54,20 @@ def main():
     for item in list:
         data = item["values"]
         readData(data)
-
+    passedCases = 0
+    failedCases = 0
+    unTestedCases = 0
     for key in dict.keys():
         item = dict[key]
-        if item["parent"] != "NA":
-            color = getColor(item["flow"])
-            G.add_edge(item["parent"], key, color=color,
-                       label=item["description"])
-    G.layout("dot")
-    G.draw("file.webp")
+        if item["status"] == "P":
+          passedCases += 1
+        elif item["status"] == "F":
+          failedCases += 1
+        else:
+          unTestedCases += 1
+    print(f'Tested cases {passedCases + failedCases + unTestedCases}')
+    print(f'Test coverage {((passedCases + failedCases) / (passedCases + failedCases + unTestedCases)) * 100}%')
+    print(f'Successful: {passedCases} Failed: {failedCases}')
     print("Done!")
 
 
