@@ -22,7 +22,8 @@ def readData(data):
             "parent": item[3],
             "description": item[1],
             "flow": item[2],
-            "status": item[-1]
+            "status": item[-1],
+            "isDevDone": item[-2]
         }
 
 
@@ -62,6 +63,8 @@ def main():
     failedCases = 0
     unTestedCases = 0
     unTestedList = []
+    needToBeFixedCases = 0
+    needToBeFixedCaseList = []
     for key in dict.keys():
         item = dict[key]
         if item["status"] == "P" or item["status"] == "p":
@@ -71,6 +74,9 @@ def main():
         else:
             unTestedCases += 1
             unTestedList.append(item)
+        if item["status"] == "F" and item["isDevDone"] != "Y":
+            needToBeFixedCases += 1
+            needToBeFixedCaseList.append(item)
     print(colored("Tested cases", "blue"),
           passedCases + failedCases + unTestedCases)
     print(colored("Test coverage", "blue"), (passedCases +
@@ -82,8 +88,11 @@ def main():
         if item["flow"] == "Main Flow":
             print(colored("warnning, mainflow not tested", "yellow"))
             print(colored(item["key"], "green"), item["description"])
+    print(colored("Need to be fixed cases: ","red"), needToBeFixedCases)
+    for item in needToBeFixedCaseList:
+        print(colored("warnning, failed case not fixed", "yellow"))
+        print(colored(item["key"], "green"), item["description"])
     print("Done!")
-
 
 if __name__ == "__main__":
     main()
