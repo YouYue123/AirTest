@@ -78,7 +78,7 @@ def main():
             G.add_edge(item["parent"], key, color=color,
                        label=item["description"])
     G.layout("dot")
-    G.draw("file.webp")
+    G.draw("file.md")
     print("Done!")
 
 
