@@ -54,7 +54,7 @@ def main():
                                      ranges=["Project", "VirtualSite", "Progress dashboard",
                                              "Link", "Markup dashboard", "PDF Report",
                                              "Videowalk", "Attachment in VirtualSite", "Markup in VirtualSite", "BIM",
-                                             "Labels and categories", "Usage", "Project Settings", "Miscellaneous"]).execute()
+                                             "Labels and categories", "Usage", "Project Settings", "Miscellaneous", "RBAC"]).execute()
     list = result["valueRanges"]
     for item in list:
         data = item["values"]
@@ -83,15 +83,17 @@ def main():
           failedCases) / (passedCases + failedCases + unTestedCases))
     print(colored("Successful: ", "green"), passedCases)
     print(colored("Failed: ", "red"), failedCases)
-    print("Untested cases: \n")
+    print(colored("Need to be fixed cases: ","red"), needToBeFixedCases)
+    print(colored("Fixed rate","red"), (failedCases - needToBeFixedCases) / failedCases )
+
+    for item in needToBeFixedCaseList:
+        print(colored("warnning, failed case not fixed", "yellow"))
+        print(colored(item["key"], "green"), item["description"])
+
     for item in unTestedList:
         if item["flow"] == "Main Flow":
             print(colored("warnning, mainflow not tested", "yellow"))
             print(colored(item["key"], "green"), item["description"])
-    print(colored("Need to be fixed cases: ","red"), needToBeFixedCases)
-    for item in needToBeFixedCaseList:
-        print(colored("warnning, failed case not fixed", "yellow"))
-        print(colored(item["key"], "green"), item["description"])
     print("Done!")
 
 if __name__ == "__main__":
